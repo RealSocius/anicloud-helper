@@ -19,9 +19,7 @@ if (
   document.URL.includes("streamtape")
 ) {
   $(document).ready(function () {
-    let file_path =
-      $("#videooolink")[0].innerHTML.toString().replaceAll("&amp;", "&") +
-      "&dl=1";
+    let file_path = $("#ideoolink").text() + "&dl=1";
     file_path = file_path.replaceAll("&amp;", "&");
     console.log(file_path);
     if (confirm("Download?")) {
