@@ -9,9 +9,40 @@ if (
   a.href = $(
     "[data-lang-key='3'] a.watchEpisode i.Streamtape"
   )[0].parentElement.href;
-  a.innerHTML = "Anschauen";
+  a.innerHTML = "Download";
   a.setAttribute("style", "all: unset; cursor: pointer;");
   $(".changeLanguageBox")[0].appendChild(a);
+
+  chrome.storage.sync.get("download", (data) => {
+    let download = data.download;
+    console.log(download);
+    if (typeof download == "undefined") {
+      download = false;
+      chrome.storage.sync.set({ download });
+    } else {
+      if (download == true) {
+        document.location = a.href;
+      }
+    }
+  });
+} else if (document.URL.includes("staffel")) {
+  let b = document.createElement("li");
+  b.onclick = () => {
+    Array.from($("tbody[id^=season] .seasonEpisodeTitle a")).forEach((el) => {
+      window.open(el.href, "_blank");
+      window.focus();
+    });
+  };
+  b.innerHTML = "📺 Staffel runterladen";
+  b.classList.add(
+    "col-md-12",
+    "col-sm-12",
+    "col-xs-6",
+    "setWatchlist",
+    "buttonAction"
+  );
+  b.setAttribute("style", "cursor: pointer;");
+  $("ul.collections")[0].insertBefore(b, $("ul.collections")[0].children[2]);
 }
 
 if (
@@ -19,11 +50,8 @@ if (
   document.URL.includes("streamtape")
 ) {
   $(document).ready(function () {
-    let file_path = $("#ideoolink").text() + "&dl=1";
+    let file_path = $("#robotlink").text() + "&dl=1";
     file_path = file_path.replaceAll("&amp;", "&");
-    console.log(file_path);
-    if (confirm("Download?")) {
-      saveAs(file_path);
-    }
+    saveAs(file_path);
   });
 }
